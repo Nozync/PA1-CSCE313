@@ -1,0 +1,35 @@
+Results (averaged 3 times):
+10 MB  -  2.8067 s
+20 MB  -  4.7300 s
+50 MB  -  9.4700 s
+100 MB -  17.3767 s
+
+Chart: 
+
+import numpy as np
+import matplotlib.pyplot as plt
+
+sizes_mb   = np.array([10, 20, 50, 100], dtype=float)
+avg_times  = np.array([2.8067, 4.7300, 9.4700, 17.3767], dtype=float)
+
+m, b = np.polyfit(sizes_mb, avg_times, 1)
+print(f"Best-fit line: time is about {m:.4f} * size_MB + {b:.4f} (s)")
+
+plt.figure(figsize=(10, 7))
+plt.plot(sizes_mb, avg_times, marker='o', linewidth=2, label='Average times')
+plt.plot(sizes_mb, m * sizes_mb + b, linestyle='--', label=f'Fit: y={m:.3f}x+{b:.3f}')
+plt.title("File transfer time vs file size")
+plt.xlabel("File size (MB)")
+plt.ylabel("Average transfer time (s)")
+plt.grid(True)
+plt.legend()
+plt.tight_layout()
+
+plt.show()
+
+
+
+Explanation of trend:
+    Bigger files take longer in a mostly linear way. Most of the delay comes from the back-and-forth “handoffs” between the programs as they pass pieces of the file. Using bigger chunks means fewer handoffs and faster copies. The drive adds a little time, but the handoffs matter most.
+
+
